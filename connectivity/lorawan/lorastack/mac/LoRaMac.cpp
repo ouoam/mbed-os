@@ -904,7 +904,7 @@ void LoRaMac::open_rx1_window(void)
     _lora_phy->rx_config(&_params.rx_window1_config);
     _lora_phy->handle_receive();
 
-    tr_debug("RX1 slot open, Freq = %lu", _params.rx_window1_config.frequency);
+    tr_debug("RX1 slot open, Freq = %u", _params.rx_window1_config.frequency);
 }
 
 void LoRaMac::open_rx2_window()
@@ -937,7 +937,7 @@ void LoRaMac::open_rx2_window()
     _lora_phy->handle_receive();
     _params.rx_slot = _params.rx_window2_config.rx_slot;
 
-    tr_debug("RX2 slot open, Freq = %lu", _params.rx_window2_config.frequency);
+    tr_debug("RX2 slot open, Freq = %u", _params.rx_window2_config.frequency);
 }
 
 void LoRaMac::on_ack_timeout_timer_event(void)
@@ -1135,7 +1135,7 @@ lorawan_status_t LoRaMac::schedule_tx()
             return status;
         case LORAWAN_STATUS_DUTYCYCLE_RESTRICTED:
             if (backoff_time != 0) {
-                tr_debug("DC enforced: Transmitting in %lu ms", backoff_time);
+                tr_debug("DC enforced: Transmitting in %u ms", backoff_time);
                 _can_cancel_tx = true;
                 _lora_time.start(_params.timers.backoff_timer, backoff_time);
             }
