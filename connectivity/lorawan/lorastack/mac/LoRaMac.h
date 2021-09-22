@@ -446,6 +446,10 @@ public:
     }
 
     lorawan_status_t set_session(loramac_protocol_params *params) {
+        _lora_time.stop(_params.timers.rx_window1_timer);
+        _lora_time.stop(_params.timers.rx_window2_timer);
+        _lora_time.stop(_params.timers.ack_timeout_timer);
+
         memcpy(&_params, params, sizeof(loramac_protocol_params));
         return LORAWAN_STATUS_OK;
     }
