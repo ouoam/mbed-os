@@ -116,6 +116,7 @@ This table summarizes the STM32Cube versions currently used in Mbed OS master br
 | L1          |    1.10.2    | https://github.com/STMicroelectronics/STM32CubeL1 |
 | L4          |    1.17.0    | https://github.com/STMicroelectronics/STM32CubeL4 |
 | L5          |    1.4.0     | https://github.com/STMicroelectronics/STM32CubeL5 |
+| U5          |    1.0.0     | https://github.com/STMicroelectronics/STM32CubeU5 |
 | WB          |    1.11.1    | https://github.com/STMicroelectronics/STM32CubeWB |
 | WL          |    1.0.0     | https://github.com/STMicroelectronics/STM32CubeWL |
 
@@ -168,7 +169,7 @@ You can also check in https://github.com/ARMmbed/stm32customtargets
 STM32 root directory is https://github.com/ARMmbed/mbed-os/tree/master/targets/TARGET_STM
 
 This contains:
-- all STM32 families directories: F0, F1, F2, F3, F4, F7, G0, H7, L0, L1, L4, WB
+- all STM32 families directories: F0, F1, F2, F3, F4, F7, G0, G4, H7, L0, L1, L4, L5, U5, WB, WL
 - Mbed OS porting layer common for all
 
 Each STM32 family contains several "sub-families".
@@ -503,6 +504,22 @@ https://github.com/ARMmbed/mbed-os/blob/master/connectivity/drivers/emac/TARGET_
 Option is also to define your own `HAL_ETH_MspInit` function,
 you then have to add **USE_USER_DEFINED_HAL_ETH_MSPINIT** macro.
 
+#### Custom IRQ Handler and Callback from user application
+To use the custom IRQ Handler and the callbacks, you need to add
+**USE_USER_DEFINED_HAL_ETH_IRQ_CALLBACK** macro
+inside any of the JASON file in either targets.json or in mbed_app.json file.
+
+For example in the targets.json,
+you need to add this line in your target:
+```"macros_add": ["USE_USER_DEFINED_HAL_ETH_IRQ_CALLBACK"],```
+or for example in the mbed_app.json, you need to add:
+``` "macros": ["USE_USER_DEFINED_HAL_ETH_IRQ_CALLBACK"]```
+
+By doing the any of the above json files, the corresponding user defined custom apis like
+HAL_ETH_RxCpltCallback() and STM_HAL_ETH_Handler() can be called from
+the user application.
+
+#### Changing default MAC address in STM32
 To change the default MAC address in STM32,
 If we have the function mbed_otp_mac_address() in the user application,the default ethernet address
 can be changed.
