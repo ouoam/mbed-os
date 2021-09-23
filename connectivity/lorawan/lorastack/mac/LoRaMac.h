@@ -450,6 +450,8 @@ public:
         _lora_time.stop(_params.timers.rx_window2_timer);
         _lora_time.stop(_params.timers.ack_timeout_timer);
 
+        _demod_ongoing = false;
+
         memcpy(&_params, params, sizeof(loramac_protocol_params));
         return LORAWAN_STATUS_OK;
     }
