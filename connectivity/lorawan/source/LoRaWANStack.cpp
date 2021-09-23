@@ -458,7 +458,7 @@ lorawan_status_t LoRaWANStack::set_device_class(const device_class_t &device_cla
     return LORAWAN_STATUS_OK;
 }
 
-lorawan_status_t  LoRaWANStack::acquire_tx_metadata(lorawan_tx_metadata &tx_metadata)
+lorawan_status_t LoRaWANStack::acquire_tx_metadata(lorawan_tx_metadata &tx_metadata)
 {
     if (DEVICE_STATE_NOT_INITIALIZED == _device_current_state) {
         return LORAWAN_STATUS_NOT_INITIALIZED;
@@ -695,6 +695,7 @@ void LoRaWANStack::handle_scheduling_failure(void)
 void LoRaWANStack::process_reception(const uint8_t *const payload, uint16_t size,
                                      int16_t rssi, int8_t snr)
 {
+    bool is_state_receiving_before = _device_current_state == DEVICE_STATE_RECEIVING;
     _device_current_state = DEVICE_STATE_RECEIVING;
 
     _ctrl_flags &= ~MSG_RECVD_FLAG;
@@ -720,8 +721,10 @@ void LoRaWANStack::process_reception(const uint8_t *const payload, uint16_t size
 
     make_rx_metadata_available();
 
-    // Post process transmission in response to the reception
-    post_process_tx_with_reception();
+    if (!is_state_receiving_before) {
+        // Post process transmission in response to the reception
+        post_process_tx_with_reception();
+    }
 
     // handle any pending MCPS indication
     if (_loramac.get_mcps_indication()->pending) {
