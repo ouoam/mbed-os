@@ -259,6 +259,8 @@ public:
      *                          In return will contain the number of port to which
      *                          message was received.
      *
+     * @param addr              A device address of receive message
+     *
      * @param flags             A flag is used to determine what type of
      *                          message is being received, for example:
      *
@@ -293,7 +295,7 @@ public:
      *                                  nothing available to read at the moment.
      *                             iv)  A negative error code on failure.
      */
-    int16_t handle_rx(uint8_t *data, uint16_t length, uint8_t &port, int &flags, bool validate_params);
+    int16_t handle_rx(uint8_t *data, uint16_t length, uint8_t &port, uint32_t &addr, int &flags, bool validate_params);
 
     /** Send Link Check Request MAC command.
      *
@@ -393,13 +395,25 @@ public:
         _loramac.unlock();
     }
 
-    lorawan_status_t get_session(loramac_protocol_params *params)
-    {
-        return _loramac.get_session(params);
+    lorawan_status_t multicast_channel_link(multicast_params_t *channel_param) {
+        return _loramac.multicast_channel_link(channel_param);
     }
 
-    lorawan_status_t set_session(loramac_protocol_params *params) {
-        return _loramac.set_session(params);
+    lorawan_status_t multicast_channel_unlink(multicast_params_t *channel_param) {
+        return _loramac.multicast_channel_unlink(channel_param);
+    }
+
+    lorawan_status_t get_rx2_channel_params(rx2_channel_params &params)
+    {
+        return _loramac.get_rx2_channel_params(params);
+    }
+
+    lorawan_status_t set_rx2_channel_params(rx2_channel_params &params) {
+        return _loramac.set_rx2_channel_params(params);
+    }
+
+    lorawan_status_t force_close_rx() {
+        return _loramac.force_close_rx();
     }
 
 private:

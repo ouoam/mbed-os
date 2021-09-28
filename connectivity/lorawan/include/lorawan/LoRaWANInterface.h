@@ -413,6 +413,10 @@ public:
      */
     int16_t receive(uint8_t *data, uint16_t length, uint8_t &port, int &flags);
 
+    int16_t receive(uint8_t port, uint8_t *data, uint16_t length, uint32_t &addr, int flags);
+
+    int16_t receive(uint8_t *data, uint16_t length, uint8_t &port, uint32_t &addr, int &flags);
+
     /** Add application callbacks to the stack.
      *
      * An example of using this API with a latch onto 'lorawan_events' could be:
@@ -534,20 +538,15 @@ public:
      */
     lorawan_status_t cancel_sending(void);
 
-    /** Get the current session
-     *
-     * Retrieves the complete MAC session, including keys, frame counters, RX configuration
-     *
-     * @param loramac_protocol_params A pointer to a protocol parameters structure
-     * @return LORAWAN_STATUS_OK
-     */
-    lorawan_status_t get_session(loramac_protocol_params*);
+    lorawan_status_t multicast_channel_link(multicast_params_t *channel_param);
 
-    /** Set the current session
-     *
-     * Sets the complete MAC session, including keys, frame counters and RX configuration
-     */
-    lorawan_status_t set_session(loramac_protocol_params*);
+    lorawan_status_t multicast_channel_unlink(multicast_params_t *channel_param);
+
+    lorawan_status_t get_rx2_channel_params(rx2_channel_params &params);
+
+    lorawan_status_t set_rx2_channel_params(rx2_channel_params &params);
+
+    lorawan_status_t force_close_rx();
 
     /** Provides exclusive access to the stack.
      *

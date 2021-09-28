@@ -164,13 +164,27 @@ lorawan_status_t LoRaWANInterface::get_backoff_metadata(int &backoff)
 int16_t LoRaWANInterface::receive(uint8_t port, uint8_t *data, uint16_t length, int flags)
 {
     Lock lock(*this);
-    return _lw_stack.handle_rx(data, length, port, flags, true);
+    uint32_t addr;
+    return _lw_stack.handle_rx(data, length, port, addr, flags, true);
 }
 
 int16_t LoRaWANInterface::receive(uint8_t *data, uint16_t length, uint8_t &port, int &flags)
 {
     Lock lock(*this);
-    return _lw_stack.handle_rx(data, length, port, flags, false);
+    uint32_t addr;
+    return _lw_stack.handle_rx(data, length, port, addr, flags, false);
+}
+
+int16_t LoRaWANInterface::receive(uint8_t port, uint8_t *data, uint16_t length, uint32_t &addr, int flags)
+{
+    Lock lock(*this);
+    return _lw_stack.handle_rx(data, length, port, addr, flags, true);
+}
+
+int16_t LoRaWANInterface::receive(uint8_t *data, uint16_t length, uint8_t &port, uint32_t &addr, int &flags)
+{
+    Lock lock(*this);
+    return _lw_stack.handle_rx(data, length, port, addr, flags, false);
 }
 
 lorawan_status_t LoRaWANInterface::add_app_callbacks(lorawan_app_callbacks_t *callbacks)
@@ -185,12 +199,26 @@ lorawan_status_t LoRaWANInterface::set_device_class(const device_class_t device_
     return _lw_stack.set_device_class(device_class);
 }
 
-lorawan_status_t LoRaWANInterface::get_session(loramac_protocol_params *params)
+lorawan_status_t LoRaWANInterface::multicast_channel_link(multicast_params_t *channel_param)
 {
-    return _lw_stack.get_session(params);
+    return _lw_stack.multicast_channel_link(channel_param);
 }
 
-lorawan_status_t LoRaWANInterface::set_session(loramac_protocol_params *params)
+lorawan_status_t LoRaWANInterface::multicast_channel_unlink(multicast_params_t *channel_param)
 {
-    return _lw_stack.set_session(params);
+    return _lw_stack.multicast_channel_unlink(channel_param);
+}
+
+lorawan_status_t LoRaWANInterface::get_rx2_channel_params(rx2_channel_params &params)
+{
+    return _lw_stack.get_rx2_channel_params(params);
+}
+
+lorawan_status_t LoRaWANInterface::set_rx2_channel_params(rx2_channel_params &params)
+{
+    return _lw_stack.set_rx2_channel_params(params);
+}
+
+lorawan_status_t LoRaWANInterface::force_close_rx() {
+    return _lw_stack.force_close_rx();
 }

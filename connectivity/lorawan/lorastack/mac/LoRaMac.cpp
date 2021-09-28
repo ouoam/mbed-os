@@ -501,6 +501,7 @@ void LoRaMac::handle_data_frame(const uint8_t *const payload,
     _mcps_indication.dl_frame_counter = downlink_counter;
     _mcps_indication.rssi = rssi;
     _mcps_indication.snr = snr;
+    _mcps_indication.address = address;
 
     _mcps_confirmation.status = LORAMAC_EVENT_INFO_STATUS_OK;
 

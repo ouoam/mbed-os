@@ -437,22 +437,26 @@ public:
     void unlock(void) { }
 #endif
 
-    /**
-     * @todo I think everything is serializable except for the multicast linked list
-     */
-    lorawan_status_t get_session(loramac_protocol_params *params) {
-        memcpy(params, &_params, sizeof(loramac_protocol_params));
+    lorawan_status_t get_rx2_channel_params(rx2_channel_params &params) {
+        params.frequency = _params.sys_params.rx2_channel.frequency;
+        params.datarate = _params.sys_params.rx2_channel.datarate;
+
         return LORAWAN_STATUS_OK;
     }
 
-    lorawan_status_t set_session(loramac_protocol_params *params) {
+    lorawan_status_t set_rx2_channel_params(rx2_channel_params &params) {
+        _params.sys_params.rx2_channel.frequency = params.frequency;
+        _params.sys_params.rx2_channel.datarate = params.datarate;
+
+        return LORAWAN_STATUS_OK;
+    }
+
+    lorawan_status_t force_close_rx() {
         _lora_time.stop(_params.timers.rx_window1_timer);
         _lora_time.stop(_params.timers.rx_window2_timer);
         _lora_time.stop(_params.timers.ack_timeout_timer);
 
         _demod_ongoing = false;
-
-        memcpy(&_params, params, sizeof(loramac_protocol_params));
         return LORAWAN_STATUS_OK;
     }
 

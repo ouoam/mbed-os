@@ -689,6 +689,10 @@ typedef struct {
      * The time on air of the received frame.
      */
     lorawan_time_t rx_toa;
+    /*!
+     * Device Address.
+     */
+    uint32_t address;
 } loramac_mcps_indication_t;
 
 /*!

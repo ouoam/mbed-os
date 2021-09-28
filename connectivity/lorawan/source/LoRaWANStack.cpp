@@ -347,7 +347,7 @@ int16_t LoRaWANStack::handle_tx(const uint8_t port, const uint8_t *data,
     return (status == LORAWAN_STATUS_OK) ? len : (int16_t) status;
 }
 
-int16_t LoRaWANStack::handle_rx(uint8_t *data, uint16_t length, uint8_t &port, int &flags, bool validate_params)
+int16_t LoRaWANStack::handle_rx(uint8_t *data, uint16_t length, uint8_t &port, uint32_t &addr, int &flags, bool validate_params)
 {
     if (_device_current_state == DEVICE_STATE_NOT_INITIALIZED) {
         return LORAWAN_STATUS_NOT_INITIALIZED;
@@ -378,6 +378,7 @@ int16_t LoRaWANStack::handle_rx(uint8_t *data, uint16_t length, uint8_t &port, i
 
     // Report values back to user
     port = _rx_msg.msg.mcps_indication.port;
+    addr = _rx_msg.msg.mcps_indication.address;
     flags = received_flags;
 
     const uint8_t *base_ptr = _rx_msg.msg.mcps_indication.buffer;
@@ -1040,11 +1041,13 @@ void LoRaWANStack::mcps_indication_handler()
         _rx_msg.msg.mcps_indication.port = mcps_indication->port;
         _rx_msg.msg.mcps_indication.buffer = mcps_indication->buffer;
         _rx_msg.msg.mcps_indication.type = mcps_indication->type;
+        _rx_msg.msg.mcps_indication.address = mcps_indication->address;
 
         // Notify application about received frame..
-        tr_debug("Packet Received %d bytes, Port=%d",
+        tr_debug("Packet Received %d bytes, Port=%d, Addr=%08X",
                  _rx_msg.msg.mcps_indication.buffer_size,
-                 mcps_indication->port);
+                 mcps_indication->port,
+                 mcps_indication->address);
         _rx_msg.receive_ready = true;
         send_event_to_application(RX_DONE);
     }
